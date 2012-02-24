@@ -6,11 +6,12 @@ module Metriks
   class Meter
     attr_reader :source
 
-    def initialize(averager_klass = Metriks::EWMA, options = {})
+    def initialize(options = {})
       @count = Atomic.new(0)
       @start_time = Time.now
       @source = options[:source]
 
+      averager_klass = options[:averager_klass] || Metriks::EWMA
       @m1_rate  = averager_klass.new_m1
       @m5_rate  = averager_klass.new_m5
       @m15_rate = averager_klass.new_m15

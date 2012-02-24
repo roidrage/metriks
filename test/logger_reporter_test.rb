@@ -27,4 +27,16 @@ class LoggerReporterTest < Test::Unit::TestCase
 
     assert_match /time=\d/, @stringio.string
   end
+
+  def test_should_include_source_if_present
+    @registry.meter('meter.testing', 'test-case').mark
+    @reporter.write
+    assert_match /source=test-case/, @stringio.string
+  end
+
+  def test_should_not_include_source_if_nil
+    @registry.meter('meter.testing').mark
+    @reporter.write
+    assert_not_match /source=/, @stringio.string
+  end
 end

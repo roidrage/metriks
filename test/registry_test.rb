@@ -17,6 +17,12 @@ class RegistryTest < Test::Unit::TestCase
 
   def test_meter
     assert_not_nil @registry.meter('testing')
+    assert_nil @registry.meter('testing').source
+  end
+
+  def test_meter_with_source
+    meter = @registry.meter('testing', 'source')
+    assert_equal "source", meter.source
   end
 
   def test_timer

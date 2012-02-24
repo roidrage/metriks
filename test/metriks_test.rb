@@ -17,6 +17,13 @@ class MetriksTest < Test::Unit::TestCase
     assert_not_nil Metriks.meter('testing')
   end
 
+  def test_meter_with_source
+    meter = Metriks.meter("testing", "source")
+    assert_not_nil meter
+    assert_not_nil Metriks::Registry.default.get("testing", "source")
+    assert_equal "source", meter.source
+  end
+
   def test_timer
     assert_not_nil Metriks.timer('testing')
   end

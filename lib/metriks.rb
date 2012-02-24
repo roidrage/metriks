@@ -19,7 +19,7 @@ module Metriks
   end
 
   def self.meter(name, source = nil)
-    Metriks::Registry.default.meter(name, source = nil)
+    Metriks::Registry.default.meter(name, source)
   end
 end
 
