@@ -176,7 +176,11 @@ module Metriks
             return metric
           end
         else
-          @metrics[name] = klass.new
+          if source
+            @metrics[name] = klass.new :source => source
+          else
+            @metrics[name] = klass.new
+          end
         end
       end
     end
