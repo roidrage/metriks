@@ -38,7 +38,7 @@ module Metriks::Reporter
         when Metriks::Meter
           log_metric name, 'meter', metric, [
             :count, :one_minute_rate, :five_minute_rate,
-            :fifteen_minute_rate, :mean_rate
+            :fifteen_minute_rate, :mean_rate, :source
           ]
         when Metriks::Counter
           log_metric name, 'counter', metric, [
@@ -64,8 +64,10 @@ module Metriks::Reporter
 
     def extract_from_metric(metric, *keys)
       keys.flatten.collect do |key|
+        value = metric.send(key)
+        next if value.nil?
         [ { key => metric.send(key) } ]
-      end
+      end.reject {|value| value.nil?}
     end
 
     def log_metric(name, type, metric, *keys)

@@ -82,8 +82,8 @@ module Metriks
     #   registry.meter('resque.calls')
     #
     # Returns the Metricks::Meter identified by the name.
-    def meter(name)
-      add_or_get(name, Metriks::Meter)
+    def meter(name, source = nil)
+      add_or_get(name, Metriks::Meter, source)
     end
 
     # Public: Fetch or create a new timer metric. Timers provide the means to
@@ -129,8 +129,11 @@ module Metriks
     #   registry.get('rack.utilization')
     #
     # Returns the metric or nil.
-    def get(name)
+    def get(name, source = nil)
       @mutex.synchronize do
+        if source
+          name = [name, source]
+        end
         @metrics[name]
       end
     end
@@ -146,8 +149,12 @@ module Metriks
     #
     # Returns nothing.
     # Raises RuntimeError if the metric name is already defined
-    def add(name, metric)
+    def add(name, metric, source = nil)
       @mutex.synchronize do
+        if source
+          name = [name, source]
+        end
+
         if @metrics[name]
           raise "Metric '#{name}' already defined"
         else
@@ -157,8 +164,11 @@ module Metriks
     end
 
     protected
-    def add_or_get(name, klass)
+    def add_or_get(name, klass, source = nil)
       @mutex.synchronize do
+        if source
+          name = [name, source]
+        end
         if metric = @metrics[name]
           if !metric.is_a?(klass)
             raise "Metric already defined as '#{metric.class}'"

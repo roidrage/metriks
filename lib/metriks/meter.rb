@@ -4,9 +4,12 @@ require 'metriks/ewma'
 
 module Metriks
   class Meter
-    def initialize(averager_klass = Metriks::EWMA)
+    attr_reader :source
+
+    def initialize(averager_klass = Metriks::EWMA, options = {})
       @count = Atomic.new(0)
       @start_time = Time.now
+      @source = options[:source]
 
       @m1_rate  = averager_klass.new_m1
       @m5_rate  = averager_klass.new_m5
