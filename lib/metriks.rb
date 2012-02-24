@@ -18,8 +18,8 @@ module Metriks
     Metriks::Registry.default.utilization_timer(name)
   end
 
-  def self.meter(name)
-    Metriks::Registry.default.meter(name)
+  def self.meter(name, source = nil)
+    Metriks::Registry.default.meter(name, source = nil)
   end
 end
 
